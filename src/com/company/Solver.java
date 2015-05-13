@@ -1,5 +1,8 @@
 package com.company;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.*;
 
 public class Solver {
@@ -17,23 +20,45 @@ public class Solver {
 
 
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
         // write your code here
 
-        Position frogPosition = new Position(4, 3);
-        Position finish = new Position(4,2);
-        Position tree1 = new Position(4,1);
-        Position tree2 = new Position(4,4);
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+
+        System.out.println("Введіть кількість кілець");
+        int roundCount = Integer.parseInt(br.readLine());
+
+        System.out.println("Введіть кількість секторів");
+        int sectorCount = Integer.parseInt(br.readLine());
+
+        System.out.println("Введіть фінішну точку(цифри через кому)");
+        String finishString = br.readLine();
+        Position finish = new Position(Integer.parseInt(finishString.split(",")[0]),Integer.parseInt(finishString.split(",")[1]));
+
+
+        System.out.println("Введіть початкову точку(цифри через кому)");
+        String startStr = br.readLine();
+        Position frogPosition = new Position(Integer.parseInt(startStr.split(",")[0]),Integer.parseInt(startStr.split(",")[1]));
+
+        System.out.println("Введіть положення дерев((цифри через кому, після кожного введеного дерева натисніть ентер.");
+        System.out.println("Для завершення введеня введіть число 0");
         Collection<Position> trees = new ArrayList<Position>();
-        trees.add(tree1);
-        trees.add(tree2);
-        Solver solver = new Solver(5, 5, finish, trees);
+        String treesStr = br.readLine();
+        while (! treesStr.equals("0")){
+            Position treePos = new Position(Integer.parseInt(treesStr.split(",")[0]),Integer.parseInt(treesStr.split(",")[1]));
+            trees.add(treePos);
+            treesStr = br.readLine();
+        }
+
+
+        Solver solver = new Solver(roundCount, sectorCount, finish, trees);
 
         LinkedList<Position> initPath = new LinkedList<Position>();
         initPath.add(frogPosition);
 
         solver.go(initPath);
 
+        System.out.println("Мінімальна кількість кроків необхідна для досягнення фінішу");
         System.out.println(solver.jumpCount);
 
     }
