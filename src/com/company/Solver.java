@@ -21,33 +21,75 @@ public class Solver {
 
 
     public static void main(String[] args) throws IOException {
-        // write your code here
+        int roundCount = 0;
+        int sectorCount = 0;
+        Position finish = null;
+        Position frogPosition = null;
+
 
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        boolean badInput = true;
+        while ( badInput) {
+            try {
+                System.out.println("Введіть кількість кілець");
+                roundCount = Integer.parseInt(br.readLine());
+                badInput = false;
+            } catch (NumberFormatException ioe) {
+                System.out.println("Неправильне введення.");
+            }
+        }
 
-        System.out.println("Введіть кількість кілець");
-        int roundCount = Integer.parseInt(br.readLine());
+        badInput = true;
+        while ( badInput) {
+            try {
+                System.out.println("Введіть кількість секторів");
+                sectorCount = Integer.parseInt(br.readLine());
+                badInput = false;
+            } catch (NumberFormatException ioe) {
+                System.out.println("Неправильне введення.");
+            }
+        }
 
-        System.out.println("Введіть кількість секторів");
-        int sectorCount = Integer.parseInt(br.readLine());
+        badInput = true;
+        while ( badInput) {
+            try {
+                System.out.println("Введіть фінішну точку(цифри через кому)");
+                String finishString = br.readLine();
+                finish = new Position(Integer.parseInt(finishString.split(",")[0]), Integer.parseInt(finishString.split(",")[1]));
+                badInput = false;
+            } catch (NumberFormatException ioe) {
+                System.out.println("Неправильне введення.");
+            }
+        }
 
-        System.out.println("Введіть фінішну точку(цифри через кому)");
-        String finishString = br.readLine();
-        Position finish = new Position(Integer.parseInt(finishString.split(",")[0]),Integer.parseInt(finishString.split(",")[1]));
-
-
-        System.out.println("Введіть початкову точку(цифри через кому)");
-        String startStr = br.readLine();
-        Position frogPosition = new Position(Integer.parseInt(startStr.split(",")[0]),Integer.parseInt(startStr.split(",")[1]));
+        badInput = true;
+        while ( badInput) {
+            try {
+                System.out.println("Введіть початкову точку(цифри через кому)");
+                String startStr = br.readLine();
+                frogPosition = new Position(Integer.parseInt(startStr.split(",")[0]), Integer.parseInt(startStr.split(",")[1]));
+                badInput = false;
+            } catch ( NumberFormatException ioe) {
+                System.out.println("Неправильне введення.");
+            }
+        }
 
         System.out.println("Введіть положення дерев((цифри через кому, після кожного введеного дерева натисніть ентер.");
         System.out.println("Для завершення введеня введіть число 0");
         Collection<Position> trees = new ArrayList<Position>();
         String treesStr = br.readLine();
         while (! treesStr.equals("0")){
-            Position treePos = new Position(Integer.parseInt(treesStr.split(",")[0]),Integer.parseInt(treesStr.split(",")[1]));
-            trees.add(treePos);
-            treesStr = br.readLine();
+            badInput = true;
+            while ( badInput) {
+                try {
+                    Position treePos = new Position(Integer.parseInt(treesStr.split(",")[0]), Integer.parseInt(treesStr.split(",")[1]));
+                    trees.add(treePos);
+                    badInput = false;
+                } catch ( NumberFormatException ioe) {
+                    System.out.println("Неправильне введення.");
+                }
+                treesStr = br.readLine();
+            }
         }
 
 
@@ -97,6 +139,7 @@ public class Solver {
                 result.add(jumpPosition);
             }
         }
+        markVisited(position);
         return result;
     }
 
