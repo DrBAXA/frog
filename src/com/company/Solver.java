@@ -56,10 +56,14 @@ public class Solver {
         LinkedList<Position> initPath = new LinkedList<Position>();
         initPath.add(frogPosition);
 
-        System.out.println(solver.go(initPath));
 
-        //System.out.println("Мінімальна кількість кроків необхідна для досягнення фінішу");
-        //System.out.println(solver.jumpCount);
+        List<Position> result = solver.go(initPath);
+
+        for(int i = result.size() - 1; i >= 0; i--){
+            System.out.println(result.get(i));
+        }
+
+
 
     }
 
