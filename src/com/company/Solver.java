@@ -98,14 +98,13 @@ public class Solver {
         LinkedList<Position> initPath = new LinkedList<Position>();
         initPath.add(frogPosition);
 
-        if(solver.go(initPath)){
-            System.out.println("Мінімальна кількість кроків необхідна для досягнення фінішу");
-            System.out.println(solver.jumpCount);
-        }else {
-            System.out.println("Неможливо досягнути фінішу");
-        };
+        solver.go(initPath);
 
+        List<Position> result = solver.go(initPath);
 
+        for(int i = result.size() - 1; i >= 0; i--){
+            System.out.println(result.get(i));
+        }
 
     }
 
@@ -117,18 +116,23 @@ public class Solver {
         markFinish(finish);
     }
 
-    public boolean go(Queue<Position> current) {
-        Queue<Position> nexQUEUE = new LinkedList<Position>();
+    public LinkedList<Position> go(LinkedList<Position> path) {
+        LinkedList<Position> result;
 
-        Position position = current.poll();
-        if(position == null) return false;
-        while ((position != null)){
-            if(isFinish(position)) return true;
-            nexQUEUE.addAll(getJumpPoints(position));
-            position = current.poll();
+        LinkedList<Position> newPath = new LinkedList<Position>(path);
+
+        if (isFinish(path.get(0))) return path;
+
+        markVisited(path.element());
+
+        for (Position position : getJumpPoints(path.element())) {
+            newPath.add(0, position);
+            result = go(newPath);
+            if(result != null) return result;
+            newPath.remove(0);
         }
-        jumpCount++;
-        return go(nexQUEUE);
+
+        return null;
     }
 
     private List<Position> getJumpPoints(Position position) {

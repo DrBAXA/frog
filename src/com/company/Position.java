@@ -8,4 +8,9 @@ class Position{
         this.radius = radius;
         this.sector = sector;
     }
+
+    @Override
+    public String toString() {
+        return "{" + radius +"," + sector +'}';
+    }
 }
