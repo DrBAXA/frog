@@ -7,14 +7,15 @@ public class Solver {
     public static final int VISITED = 3;
     public static final int TREE = 1;
     public static final int FINISH = 2;
-
     private static final Jump[] possibleJumps = {new Jump(2, 1), new Jump(1, 2), new Jump(0, 3), new Jump(-1, 2), new Jump(-2, 1)};
 
     private int radiusCount;
     private int sectorCount;
     private int[][] map;
 
-    private Position frogPosition;
+    int jumpCount = 0;
+
+
 
     public static void main(String[] args) {
         // write your code here
@@ -26,41 +27,37 @@ public class Solver {
         Collection<Position> trees = new ArrayList<Position>();
         trees.add(tree1);
         trees.add(tree2);
-        Solver solver = new Solver(5, 5, frogPosition, finish, trees);
+        Solver solver = new Solver(5, 5, finish, trees);
 
         LinkedList<Position> initPath = new LinkedList<Position>();
         initPath.add(frogPosition);
 
-        System.out.println(solver.go(initPath));
+        solver.go(initPath);
+
+        System.out.println(solver.jumpCount);
 
     }
 
-    public Solver(int radiusCount, int sectorCount, Position frogPosition, Position finish, Collection<Position> trees) {
+    public Solver(int radiusCount, int sectorCount, Position finish, Collection<Position> trees) {
         map = new int[radiusCount + 1][sectorCount + 1];
         this.radiusCount = radiusCount;
         this.sectorCount = sectorCount;
-        this.frogPosition = frogPosition;
         markTree(trees);
         markFinish(finish);
     }
 
-    public LinkedList<Position> go(LinkedList<Position> path) {
-        LinkedList<Position> result;
+    public void go(Queue<Position> current) {
+        Queue<Position> nexQUEUE = new LinkedList<Position>();
 
-        LinkedList<Position> newPath = new LinkedList<Position>(path);
-
-        if (isFinish(path.get(0))) return path;
-
-        markVisited(path.element());
-
-        for (Position position : getJumpPoints(path.element())) {
-            newPath.add(0, position);
-            result = go(newPath);
-            if(result != null) return result;
-            newPath.remove(0);
+        Position position = current.poll();
+        while ((position != null)){
+            if(isFinish(position)) return;
+            nexQUEUE.addAll(getJumpPoints(position));
+            position = current.poll();
         }
+        jumpCount++;
+        go(nexQUEUE);
 
-        return null;
     }
 
     private List<Position> getJumpPoints(Position position) {
