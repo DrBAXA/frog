@@ -56,10 +56,10 @@ public class Solver {
         LinkedList<Position> initPath = new LinkedList<Position>();
         initPath.add(frogPosition);
 
-        solver.go(initPath);
+        System.out.println(solver.go(initPath));
 
-        System.out.println("Мінімальна кількість кроків необхідна для досягнення фінішу");
-        System.out.println(solver.jumpCount);
+        //System.out.println("Мінімальна кількість кроків необхідна для досягнення фінішу");
+        //System.out.println(solver.jumpCount);
 
     }
 
@@ -71,18 +71,23 @@ public class Solver {
         markFinish(finish);
     }
 
-    public void go(Queue<Position> current) {
-        Queue<Position> nexQUEUE = new LinkedList<Position>();
+    public LinkedList<Position> go(LinkedList<Position> path) {
+        LinkedList<Position> result;
 
-        Position position = current.poll();
-        while ((position != null)){
-            if(isFinish(position)) return;
-            nexQUEUE.addAll(getJumpPoints(position));
-            position = current.poll();
+        LinkedList<Position> newPath = new LinkedList<Position>(path);
+
+        if (isFinish(path.get(0))) return path;
+
+        markVisited(path.element());
+
+        for (Position position : getJumpPoints(path.element())) {
+            newPath.add(0, position);
+            result = go(newPath);
+            if(result != null) return result;
+            newPath.remove(0);
         }
-        jumpCount++;
-        go(nexQUEUE);
 
+        return null;
     }
 
     private List<Position> getJumpPoints(Position position) {
@@ -93,6 +98,7 @@ public class Solver {
                 result.add(jumpPosition);
             }
         }
+        markVisited(position);
         return result;
     }
 
@@ -114,7 +120,9 @@ public class Solver {
 
         int newSector = position.sector + jump.dSector > sectorCount ? position.sector + jump.dSector - sectorCount : position.sector + jump.dSector;
 
-        return new Position(position.radius + jump.dRadius, newSector);
+        Position result = new Position(position.radius + jump.dRadius, newSector);
+        return result;
+
     }
 
     private boolean isPossible(Position position) {
