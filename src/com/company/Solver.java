@@ -143,7 +143,6 @@ public class Solver {
                 result.add(jumpPosition);
             }
         }
-        markVisited(position);
         return result;
     }
 
